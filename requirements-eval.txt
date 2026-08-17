@@ -1,0 +1,13 @@
+# Install these in a separate evaluation environment in addition to a
+# torch/torchvision build matching the host CUDA runtime.
+numpy
+Pillow
+opencv-python
+scipy
+tqdm
+lpips
+torch-fidelity
+# Optional but preferred; localization has a fallback when unavailable.
+scikit-learn
+# Optional: training still works without TensorBoard logging.
+tensorboard

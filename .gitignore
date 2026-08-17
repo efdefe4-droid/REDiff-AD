@@ -1,0 +1,37 @@
+# Python/cache
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+
+# Models and local datasets
+models/
+checkpoints/
+data/
+datasets/
+.cache/
+.huggingface/
+*.safetensors
+
+# Generation outputs
+result/
+result_*/
+outputs/
+runs/
+*.npy
+
+# Evaluation outputs
+results/
+eval_diversity/result/
+eval_diversity/results/
+eval_diversity/tmp/
+eval_downstream/generated_data/
+eval_downstream/checkpoints/
+eval_downstream/logs/
+eval_downstream/test_results/
+
+# Runtime/editor
+*.log
+.env
+.idea/
+.vscode/

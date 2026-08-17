@@ -1,0 +1,63 @@
+{
+  "review_anonymization": {
+    "double_blind": true,
+    "identifying_provenance": "withheld_until_review_completion"
+  },
+  "generation_base": {
+    "path": "withheld_for_double_blind_review",
+    "git_commit": "withheld_for_double_blind_review",
+    "role": "clean T2T generation baseline"
+  },
+  "t2r_patch_source": {
+    "path": "withheld_for_double_blind_review",
+    "git_commit": "withheld_for_double_blind_review",
+    "role": "verified T2R working-tree patch"
+  },
+  "eval_source": {
+    "path": "withheld_for_double_blind_review",
+    "git_commit": "withheld_for_double_blind_review",
+    "role": "current working-tree eval code, including local Insert-Anything fixes"
+  },
+  "attention_design": {
+    "direct_localization": "target_to_ref_image",
+    "direct_top_k": 10,
+    "direct_block_csv": "configs/block_frequency_t2r.csv",
+    "adaptive_monitor": "target_to_ref_image",
+    "adaptive_block_csv": "configs/block_frequency_t2r.csv",
+    "adaptive_top_blocks": "configs/top10_t2r_blocks.txt",
+    "shape_k_scope": "middle",
+    "shape_k_resolved_blocks": 36,
+    "shape_k_eta": 0.3,
+    "shape_k_suppress_scale": 0.6,
+    "q80_refine": true,
+    "contour_refine": true,
+    "contour_component_mode": "all",
+    "full_flux_quantize": "int4",
+    "lora_path": "WensongSong/Insert-Anything",
+    "lora_weight_name": "20250321_steps5000_pytorch_lora_weights.safetensors"
+  },
+  "hashes": {
+    "configs/block_frequency_t2r.csv": "806218307ab9b87a9e0a1a3960bfc6bccbf6f75883573b87791b5d40c3858694",
+    "configs/top10_t2r_blocks.txt": "4dfe00c01fd975399910b3a1bdc9331d2e61fb79c90fb287a924b27a86e88acc",
+    "batch_insert_anything.py": "05530c94b31f7b420da9e576ebb1e9b1a7f6806a6f2ec8bb2a4e8a9f860c10bf",
+    "run_insert_anything.py": "36fcc74ffe2b29e393004c91ccc0572093f1d34e3ce6b099b8e36fc9ec90cf19",
+    "generation_attention/batch_visualize_flux_attention.py": "5373d37cf2342e03e54f34e710e20e45d687a7366ce42f56705fd67f91dd53ff",
+    "generation_attention/visualize_flux_attention.py": "c10690470f40017dc511afed3739f3792be1636473776a39a404dad1a025a695",
+    "generation_attention/mask_refinement.py": "2a7883afe101aa3af9f6b73d9d30d1715d25c194f5d795a21cac77a7b514eb4a",
+    "generation_attention/resume_safety.py": "19bc8eaa047dc63ed23fab6f47793eb985e26f4658ae2713c2a8f56639c3e4c8",
+    "generation_attention/target_mask_policy.py": "ca7afea037ba61db890c3d1c3a33bd642f3ace752a778e9fa48aad7b1748d67d",
+    "scripts/run_attention_direct_top10.sh": "f61fb80bb556be2899eb6accc435ee75a1d15932434ee12480fb651b0545518d",
+    "scripts/run_hazelnut_t2r.sh": "87211e32b45f0addcd31aaff267446daf3cb221e766b9dfb340d02db7b54fdd8",
+    "scripts/validate_smoke_output.py": "5e7edb0cd3e4012162ccfa7276a8faf1d7901edec04577706537943f17ea3ea5"
+  },
+  "verified_generation_environment": {
+    "python": "3.11",
+    "torch": "2.6.0+cu124",
+    "torchvision": "0.21.0+cu124",
+    "diffusers": "0.32.2",
+    "transformers": "4.46.3",
+    "peft": "0.7.0",
+    "accelerate": "1.1.1",
+    "bitsandbytes": "0.49.2"
+  }
+}

@@ -1,0 +1,9 @@
+cff-version: 1.2.0
+message: "If you use this research code, please cite the repository and the associated thesis or paper."
+title: "REDiff-AD: Reference-Guided Diffusion for Anomaly Editing"
+type: software
+authors:
+  - name: "Anonymous Authors"
+version: 0.1.0
+date-released: 2026-08-09
+repository-code: "https://github.com/efdefe4-droid/REDiff-AD"

@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  cpu-contract-tests:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: requirements-dev.txt
+      - name: Install lightweight test dependencies
+        run: python -m pip install -r requirements-dev.txt
+      - name: Check shell syntax
+        run: |
+          find scripts eval_diversity eval_downstream -type f -name '*.sh' -print0 \
+            | xargs -0 -n1 bash -n
+      - name: Run CPU-only contract tests
+        run: python -m pytest -q

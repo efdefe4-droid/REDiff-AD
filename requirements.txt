@@ -1,0 +1,19 @@
+# Generation runtime. The verified machine uses the CUDA 12.4 builds of
+# torch 2.6.0 and torchvision 0.21.0; install the wheel matching your CUDA.
+torch==2.6.0
+torchvision==0.21.0
+diffusers==0.32.2
+transformers==4.46.3
+peft==0.7.0
+accelerate==1.1.1
+bitsandbytes==0.49.2
+huggingface-hub==0.25.0
+opencv-python>=4.10
+numpy
+Pillow>=10
+scipy
+scikit-image
+PyWavelets
+tqdm
+protobuf
+sentencepiece
