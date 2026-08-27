@@ -54,6 +54,7 @@ def test_demo_subset_is_exact_and_auditable() -> None:
     for relative, expected_hash in EXPECTED_HASHES.items():
         path = ASSET_ROOT / relative
         assert path.stat().st_size > 0
+        assert path.stat().st_mode & 0o111 == 0
         assert sha256(path) == expected_hash
         with Image.open(path) as image:
             assert image.size == (1024, 1024)
