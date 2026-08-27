@@ -195,8 +195,8 @@ FULL_FLUX_QUANTIZE="${FULL_FLUX_QUANTIZE:-int4}"
 QUANT_ARGS=(--full-flux-quantize "$FULL_FLUX_QUANTIZE")
 FLUX_FILL_PATH="${FLUX_FILL_PATH:-black-forest-labs/FLUX.1-Fill-dev}"
 FLUX_REDUX_PATH="${FLUX_REDUX_PATH:-black-forest-labs/FLUX.1-Redux-dev}"
-LORA_PATH="${LORA_PATH:-${INSERT_ANYTHING_LORA_PATH:-WensongSong/Insert-Anything}}"
-LORA_WEIGHT_NAME="${LORA_WEIGHT_NAME:-${INSERT_ANYTHING_LORA_WEIGHT:-20250321_steps5000_pytorch_lora_weights.safetensors}}"
+LORA_PATH="${LORA_PATH:-${IN_CONTEXT_LORA_PATH:-WensongSong/Insert-Anything}}"
+LORA_WEIGHT_NAME="${LORA_WEIGHT_NAME:-${IN_CONTEXT_LORA_WEIGHT:-20250321_steps5000_pytorch_lora_weights.safetensors}}"
 
 # ---------------------------------------------------------------------------
 # Dataset and outputs

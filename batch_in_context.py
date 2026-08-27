@@ -17,7 +17,7 @@ import torch
 from PIL import Image
 from tqdm import tqdm
 
-from run_insert_anything import (
+from run_in_context import (
     DEFAULT_NUNCHAKU_LORA,
     DEFAULT_NUNCHAKU_TRANSFORMER,
     box2squre,
@@ -53,7 +53,7 @@ class TeeStream:
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Batch Insert-Anything generation for hazelnut defects.")
+    parser = argparse.ArgumentParser(description="Batch In-Context generation for hazelnut defects.")
     parser.add_argument("--anomalies", nargs="+", required=True)
     parser.add_argument("--ref-ids", "--ref_ids", nargs="+", required=True)
     parser.add_argument("--samples-per-anomaly", "--samples_per_anomaly", type=int, default=500)
@@ -1142,7 +1142,7 @@ def run_batch() -> None:
         sys.stderr = TeeStream(original_stderr, text_log_file)
 
     started_at = time.strftime("%Y-%m-%d %H:%M:%S")
-    print(f"[{started_at}] Starting Insert-Anything batch", flush=True)
+    print(f"[{started_at}] Starting In-Context batch", flush=True)
     print(f"Output root: {out_root}", flush=True)
     print(f"Anomalies/ref ids: {list(zip(args.anomalies, args.ref_ids))}", flush=True)
     print(f"Samples per anomaly: {args.samples_per_anomaly}", flush=True)
@@ -1174,7 +1174,7 @@ def run_batch() -> None:
         raise FileNotFoundError(f"No source images found under {source_root}")
 
     pipe, redux = load_pipelines(args)
-    lora_runtime_audit = getattr(pipe, "_insert_anything_lora_audit", None)
+    lora_runtime_audit = getattr(pipe, "_in_context_lora_audit", None)
     generator_device = "cuda" if args.device.startswith("cuda") and torch.cuda.is_available() else "cpu"
     print(
         f"Devices: execution={args.device}, generator={generator_device}, "
@@ -1432,7 +1432,7 @@ def run_batch() -> None:
                     raise RuntimeError(error)
     finally:
         csv_log_file.close()
-        print(f"[{time.strftime('%Y-%m-%d %H:%M:%S')}] Finished Insert-Anything batch", flush=True)
+        print(f"[{time.strftime('%Y-%m-%d %H:%M:%S')}] Finished In-Context batch", flush=True)
         if text_log_file is not None:
             sys.stdout = original_stdout
             sys.stderr = original_stderr

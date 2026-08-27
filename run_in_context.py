@@ -32,7 +32,7 @@ DEFAULT_NUNCHAKU_LORA = (
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Run Insert-Anything on a source/reference image-mask pair.")
+    parser = argparse.ArgumentParser(description="Run In-Context editing on a source/reference image-mask pair.")
     parser.add_argument("--source-image", "--source_image", required=True)
     parser.add_argument("--source-mask", "--source_mask", required=True)
     parser.add_argument("--ref-image", "--ref_image", "--reference-image", "--reference_image", required=True)
@@ -67,12 +67,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--lora-path",
         "--lora_path",
-        default=os.environ.get("INSERT_ANYTHING_LORA_PATH", "WensongSong/Insert-Anything"),
+        default=os.environ.get("IN_CONTEXT_LORA_PATH", "WensongSong/Insert-Anything"),
     )
     parser.add_argument(
         "--lora-weight-name",
         "--lora_weight_name",
-        default=os.environ.get("INSERT_ANYTHING_LORA_WEIGHT", DEFAULT_LORA_WEIGHT),
+        default=os.environ.get("IN_CONTEXT_LORA_WEIGHT", DEFAULT_LORA_WEIGHT),
     )
     parser.add_argument("--nunchaku", action="store_true", help="Use the Nunchaku int4 FLUX transformer.")
     parser.add_argument(
@@ -344,12 +344,12 @@ def load_pipelines(args: argparse.Namespace) -> tuple[FluxFillPipeline, FluxPrio
         }
         if not lora_runtime_audit["verified"]:
             raise RuntimeError(
-                "Insert-Anything LoRA is not active after load: "
+                "In-Context LoRA is not active after load: "
                 f"available={available_adapters}, active={active_adapters}"
             )
-        pipe._insert_anything_lora_audit = lora_runtime_audit
+        pipe._in_context_lora_audit = lora_runtime_audit
         print(
-            "Insert-Anything LoRA adapters: "
+            "In-Context LoRA adapters: "
             f"available={available_adapters}, initial={initial_active_adapters}, "
             f"active={active_adapters}, realigned={realigned}, verified=True",
             flush=True,
@@ -395,7 +395,7 @@ def main() -> None:
         return
 
     pipe, redux = load_pipelines(args)
-    lora_runtime_audit = getattr(pipe, "_insert_anything_lora_audit", None)
+    lora_runtime_audit = getattr(pipe, "_in_context_lora_audit", None)
     pipe_prior_output = redux(Image.fromarray(masked_ref_image))
 
     generator_device = "cuda" if args.device.startswith("cuda") and torch.cuda.is_available() else "cpu"

@@ -30,8 +30,8 @@ def test_python_sources_parse_and_keep_eval_boundary() -> None:
         relative = path.relative_to(ROOT)
         if relative.parts[0] in {"eval_diversity", "eval_downstream"}:
             assert "generation_attention" not in imports
-            assert "run_insert_anything" not in imports
-        if relative.parts[0] == "generation_attention" or relative.name in {"run_insert_anything.py", "batch_insert_anything.py"}:
+            assert "run_in_context" not in imports
+        if relative.parts[0] == "generation_attention" or relative.name in {"run_in_context.py", "batch_in_context.py"}:
             assert "eval_diversity" not in imports
             assert "eval_downstream" not in imports
 

@@ -21,7 +21,7 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from batch_insert_anything import (
+from batch_in_context import (
     list_images,
     load_object_support_from_file,
     object_support_from_image,
@@ -32,7 +32,7 @@ from batch_insert_anything import (
     resolve_matching_file,
     sample_sources,
 )
-from run_insert_anything import DEFAULT_LORA_WEIGHT, crop_back, load_pipelines, load_rgb
+from run_in_context import DEFAULT_LORA_WEIGHT, crop_back, load_pipelines, load_rgb
 from generation_attention import mask_refinement as mask_refinement_settings
 from generation_attention.mask_refinement import (
     connected_component_count,
@@ -1471,7 +1471,7 @@ def main() -> None:
         adaptive_log_writer.writeheader()
     print(f"[{time.strftime('%Y-%m-%d %H:%M:%S')}] Loading full FLUX batch pipeline", flush=True)
     pipe, redux = load_pipelines(args)
-    lora_runtime_audit = getattr(pipe, "_insert_anything_lora_audit", None)
+    lora_runtime_audit = getattr(pipe, "_in_context_lora_audit", None)
     run_config["lora_runtime_audit"] = lora_runtime_audit
     run_config_path.write_text(json.dumps(run_config, indent=2), encoding="utf-8")
     with (out_root / "run_config_history.jsonl").open("a", encoding="utf-8") as history_file:

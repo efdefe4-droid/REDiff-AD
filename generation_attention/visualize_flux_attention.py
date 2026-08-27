@@ -20,7 +20,7 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from run_insert_anything import (
+from run_in_context import (
     DEFAULT_LORA_WEIGHT,
     crop_back,
     dtype_from_name,
@@ -1269,7 +1269,7 @@ def register_attention_recorders(pipe, recorder: FluxAttentionRecorder) -> int:
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Visualize FLUX attention maps for one Insert-Anything sample.")
+    parser = argparse.ArgumentParser(description="Visualize FLUX attention maps for one In-Context sample.")
     parser.add_argument("--source-image", default=DEFAULT_SOURCE_IMAGE)
     parser.add_argument("--source-mask", default=DEFAULT_SOURCE_MASK)
     parser.add_argument("--ref-image", default=DEFAULT_REF_IMAGE)
@@ -1479,7 +1479,7 @@ def main() -> None:
     diptych_np = np.array(diptych_ref_tar.convert("RGB"))
     target_base_rgb = diptych_np[:, mask_diptych.size[0] // 2 :, :]
 
-    # load_pipelines expects the same argparse fields as run_insert_anything.py.
+    # load_pipelines expects the same argparse fields as run_in_context.py.
     args.nunchaku = False
     args.nunchaku_transformer_path = None
     args.nunchaku_lora_path = None
