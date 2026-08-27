@@ -198,3 +198,41 @@ def test_unmodified_objects_keep_original_random_object_policy(
     assert "target mask: source=random_object" in output
     assert "area_ratio=0.5-0.9" in output
     assert "source=reference_vertical_mixed" not in output
+
+
+def test_bundled_hazelnut_demo_dry_run_uses_all_defects(tmp_path: Path) -> None:
+    env = os.environ.copy()
+    for name in (
+        "MVTEC_ROOT",
+        "DATASET_ROOT",
+        "ANOMALIES_STR",
+        "REF_IDS_STR",
+        "SAMPLES_PER_ANOMALY",
+        "SEED",
+        "RUN_NAME",
+        "LOCAL_FILES_ONLY",
+    ):
+        env.pop(name, None)
+    env.update(
+        {
+            "OUT_ROOT": str(tmp_path / "out"),
+            "DRY_RUN": "1",
+            "LOG_TO_FILE": "0",
+        }
+    )
+    completed = subprocess.run(
+        ["bash", "scripts/run_hazelnut_demo.sh"],
+        cwd=ROOT,
+        env=env,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    output = completed.stdout + completed.stderr
+    assert completed.returncode == 0, output
+    assert f"dataset:  {ROOT / 'demo_assets/mvtec_ad/hazelnut'}" in output
+    assert "defects:  crack hole print cut" in output
+    assert "refs:     000 000 000 000" in output
+    assert "samples:  1 per defect" in output
+    assert "models:   local_files_only=0" in output
+    assert "DRY_RUN=1: configuration validated; generation was not started." in output
