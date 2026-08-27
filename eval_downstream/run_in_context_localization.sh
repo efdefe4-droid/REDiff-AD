@@ -8,7 +8,7 @@ cd "$REPO_ROOT"
 OBJ="${OBJ:-hazelnut}"
 PROPOSAL_ROOT="${PROPOSAL_ROOT:-$REPO_ROOT/outputs}"
 RESULT_ROOT="${RESULT_ROOT:-$PROPOSAL_ROOT/hazelnut_rediff_ad}"
-GENERATED_LAYOUT="${GENERATED_LAYOUT:-insert-anything}"
+GENERATED_LAYOUT="${GENERATED_LAYOUT:-in_context}"
 
 DEFAULT_ANOMALIES=(
     crack
@@ -99,7 +99,7 @@ log() {
 
 PREPARE_ARGS=(
     --input-layout "$GENERATED_LAYOUT"
-    --insert-anything-results-root "$RESULT_ROOT"
+    --in-context-results-root "$RESULT_ROOT"
     --sample-name "$OBJ"
     --anomalies "${ANOMALY_LIST[@]}"
     --output-root "$GENERATED_DATA_ROOT"
@@ -126,7 +126,7 @@ if [ "$SKIP_MISSING" = "1" ]; then
 fi
 
 log "============================================================"
-log "Insert-Anything downstream localization fine tune"
+log "In-Context downstream localization fine tune"
 log "Object:       $OBJ"
 log "Anomalies:    ${ANOMALY_LIST[*]}"
 log "Result root:  $RESULT_ROOT"
@@ -160,7 +160,7 @@ if [ "$SKIP_PREPARE" = "1" ]; then
 else
     log
     log "============================================================"
-    log "Preparing Insert-Anything outputs for localization"
+    log "Preparing In-Context outputs for localization"
     log "============================================================"
     conda run --no-capture-output -n "$CONDA_ENV" python eval_downstream/prepare_reflex_classification_data.py "${PREPARE_ARGS[@]}" 2>&1 | tee -a "$LOG_FILE"
 fi

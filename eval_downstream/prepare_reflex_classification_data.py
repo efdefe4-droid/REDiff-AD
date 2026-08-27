@@ -100,10 +100,10 @@ def reflex_sample_dirs(args, anomaly):
     return sorted([path for path in src_run_dir.iterdir() if path.is_dir()], key=numeric_key)
 
 
-def insert_anything_sample_dirs(args, anomaly):
-    anomaly_dir = args.insert_anything_results_root / anomaly
+def in_context_sample_dirs(args, anomaly):
+    anomaly_dir = args.in_context_results_root / anomaly
     if not anomaly_dir.exists():
-        message = f"missing Insert-Anything anomaly dir: {anomaly_dir}"
+        message = f"missing In-Context anomaly dir: {anomaly_dir}"
         if args.skip_missing:
             print(f"[skip] {message}")
             return []
@@ -161,7 +161,7 @@ def find_anomaly_diffusion_mask(mask_dir, image_path):
 
 
 def anomaly_diffusion_sample_records(args, anomaly):
-    anomaly_dir = args.insert_anything_results_root / anomaly
+    anomaly_dir = args.in_context_results_root / anomaly
     image_dir = anomaly_dir / "image"
     mask_dir = anomaly_dir / "mask"
     if not image_dir.exists():
@@ -218,7 +218,7 @@ def find_o2mag_flat_mask(image_path):
 
 
 def o2mag_flat_sample_records(args, anomaly):
-    anomaly_dir = args.insert_anything_results_root / anomaly
+    anomaly_dir = args.in_context_results_root / anomaly
     if not anomaly_dir.exists():
         message = f"missing O2MAG anomaly dir: {anomaly_dir}"
         if args.skip_missing:
@@ -257,7 +257,7 @@ def o2mag_flat_sample_records(args, anomaly):
 
 
 def tf_idg_sample_records(args, anomaly):
-    object_root = args.insert_anything_results_root
+    object_root = args.in_context_results_root
     image_dir = object_root / "test" / anomaly
     mask_dir = object_root / "ground_truth" / anomaly
     if not image_dir.exists():
@@ -301,8 +301,8 @@ def tf_idg_sample_records(args, anomaly):
 
 
 def list_source_sample_dirs(args, anomaly):
-    if args.input_layout == "insert-anything":
-        sample_dirs = insert_anything_sample_dirs(args, anomaly)
+    if args.input_layout == "in_context":
+        sample_dirs = in_context_sample_dirs(args, anomaly)
     elif args.input_layout in {"anomaly-diffusion", "seas", "anostyle", "dualanodiff", "self-anomalydiffusion"}:
         sample_dirs = anomaly_diffusion_sample_records(args, anomaly)
     elif args.input_layout == "o2mag-flat":
@@ -431,7 +431,7 @@ def main():
         "--input-layout",
         choices=[
             "reflex",
-            "insert-anything",
+            "in_context",
             "anomaly-diffusion",
             "seas",
             "anostyle",
@@ -447,7 +447,7 @@ def main():
         type=Path,
         default=Path("results"),
     )
-    parser.add_argument("--insert-anything-results-root", type=Path)
+    parser.add_argument("--in-context-results-root", type=Path)
     parser.add_argument("--sample-name", type=str, required=True)
     parser.add_argument("--anomalies", nargs="+", required=True)
     parser.add_argument("--run-name", type=str, default="")
@@ -481,12 +481,12 @@ def main():
     args = parser.parse_args()
 
     args.reflex_results_root = args.reflex_results_root.expanduser().resolve()
-    if args.insert_anything_results_root is not None:
-        args.insert_anything_results_root = args.insert_anything_results_root.expanduser().resolve()
+    if args.in_context_results_root is not None:
+        args.in_context_results_root = args.in_context_results_root.expanduser().resolve()
     args.output_root = args.output_root.expanduser().resolve()
 
-    if args.input_layout != "reflex" and args.insert_anything_results_root is None:
-        raise ValueError(f"--insert-anything-results-root is required for --input-layout {args.input_layout}")
+    if args.input_layout != "reflex" and args.in_context_results_root is None:
+        raise ValueError(f"--in-context-results-root is required for --input-layout {args.input_layout}")
     if args.input_layout == "reflex" and not args.run_name:
         raise ValueError("--run-name is required for --input-layout reflex")
 

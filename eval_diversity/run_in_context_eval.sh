@@ -8,7 +8,7 @@ cd "$REPO_ROOT"
 OBJ="${OBJ:-hazelnut}"
 PROPOSAL_ROOT="${PROPOSAL_ROOT:-$REPO_ROOT/outputs}"
 RESULT_ROOT="${RESULT_ROOT:-$PROPOSAL_ROOT/hazelnut_rediff_ad}"
-GENERATED_LAYOUT="${GENERATED_LAYOUT:-insert-anything}"
+GENERATED_LAYOUT="${GENERATED_LAYOUT:-in_context}"
 IMAGE_NAME="${IMAGE_NAME:-edit.png}"
 
 DEFAULT_ANOMALIES=(
@@ -235,7 +235,7 @@ for ANO in "${ANOMALY_LIST[@]}"; do
                 count=$((count + 1))
             done < <(find "$ANO_DIR" -maxdepth 1 \( -type f -o -type l \) \( -iname "*.png" -o -iname "*.jpg" -o -iname "*.jpeg" \) -print0 | sort -z)
             ;;
-        insert-anything)
+        in_context)
             while IFS= read -r -d '' img; do
                 sample_dir="$(basename "$(dirname "$img")")"
                 ref_dir="$(basename "$(dirname "$(dirname "$img")")")"

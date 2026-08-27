@@ -8,7 +8,7 @@ cd "$REPO_ROOT"
 OBJ="${OBJ:-hazelnut}"
 PROPOSAL_ROOT="${PROPOSAL_ROOT:-$REPO_ROOT/outputs}"
 RESULT_ROOT="${RESULT_ROOT:-$PROPOSAL_ROOT/hazelnut_rediff_ad}"
-GENERATED_LAYOUT="${GENERATED_LAYOUT:-insert-anything}"
+GENERATED_LAYOUT="${GENERATED_LAYOUT:-in_context}"
 IMAGE_NAME="${IMAGE_NAME:-edit.png}"
 
 DEFAULT_ANOMALIES=(
@@ -100,7 +100,7 @@ conda activate "$CONDA_ENV"
 
 PREPARE_ARGS=(
     --input-layout "$GENERATED_LAYOUT"
-    --insert-anything-results-root "$RESULT_ROOT"
+    --in-context-results-root "$RESULT_ROOT"
     --sample-name "$OBJ"
     --anomalies "${ANOMALY_LIST[@]}"
     --output-root "$GENERATED_DATA_ROOT"
@@ -125,7 +125,7 @@ if [ "$SKIP_MISSING" = "1" ]; then
 fi
 
 log "============================================================"
-log "Insert-Anything downstream classification via eval_downstream"
+log "In-Context downstream classification via eval_downstream"
 log "Object:       $OBJ"
 log "Anomalies:    ${ANOMALY_LIST[*]}"
 log "Result root:  $RESULT_ROOT"
@@ -152,7 +152,7 @@ if [ "$SKIP_PREPARE" = "1" ]; then
 else
     log
     log "============================================================"
-    log "Preparing Insert-Anything outputs for classification"
+    log "Preparing In-Context outputs for classification"
     log "============================================================"
     python -u eval_downstream/prepare_reflex_classification_data.py "${PREPARE_ARGS[@]}" 2>&1 | tee -a "$LOG_FILE"
 fi

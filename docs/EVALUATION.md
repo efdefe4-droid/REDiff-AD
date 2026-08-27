@@ -9,7 +9,7 @@ The evaluation launchers support the REDiff-AD output layout directly:
 
 ## Diversity/quality
 
-`eval_diversity/run_insertanything_eval.sh` prepares flat image links and can run KID, IS, and IC-LPIPS. A six-image-per-defect run is useful only for plumbing validation; it is too small for a thesis metric claim.
+`eval_diversity/run_in_context_eval.sh` prepares flat image links and can run KID, IS, and IC-LPIPS. A six-image-per-defect run is useful only for plumbing validation; it is too small for a thesis metric claim.
 
 Create the environment documented in the README and install
 `requirements-eval.txt` before running metrics. The launchers default to the
@@ -20,8 +20,8 @@ requested split count to the available image count for small plumbing runs.
 
 ## Downstream tasks
 
-- Classification: `eval_downstream/run_insertanything_classification.sh`
-- Localization: `eval_downstream/run_insertanything_localization.sh`
+- Classification: `eval_downstream/run_in_context_classification.sh`
+- Localization: `eval_downstream/run_in_context_localization.sh`
 
 Use `PREPARE_ONLY=1` first. The default localization mask is `contour_refined_mask.png`; mask ablations can set `MASK_NAME` to `coarse_mask.png`, `q80_appearance_mask.png`, or `all_block_coarse_mask.png`.
 
