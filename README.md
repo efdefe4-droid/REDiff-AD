@@ -153,7 +153,7 @@ Either export the path or place the data under `datasets/` in this repository:
 export MVTEC_ROOT=/path/to/mvtec_ad
 ```
 
-Apart from the documented 23-file hazelnut demo subset, no dataset, model,
+Apart from the documented 13-image hazelnut demo subset, no dataset, model,
 generated image, checkpoint, or log is tracked by Git.
 
 ## 4. Quick reproduction with the full dataset

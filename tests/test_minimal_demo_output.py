@@ -72,3 +72,34 @@ def test_pruner_validates_every_sample_before_deleting(tmp_path: Path) -> None:
     assert (complete_sample / "metadata.json").is_file()
     assert (incomplete_sample / "metadata.json").is_file()
     assert root_log.is_file()
+
+
+def test_pruner_rejects_symlinked_sample_without_touching_target(tmp_path: Path) -> None:
+    run_root = tmp_path / "run"
+    safe_sample = make_sample(run_root, "hole", 0)
+    external_sample = make_sample(tmp_path / "external", "crack", 0)
+    linked_sample = run_root / "crack" / "ref_000" / "000"
+    linked_sample.parent.mkdir(parents=True)
+    linked_sample.symlink_to(external_sample, target_is_directory=True)
+
+    completed = run_pruner(run_root)
+
+    assert completed.returncode != 0
+    assert "outside run root or uses a symlink" in completed.stderr
+    assert (safe_sample / "metadata.json").is_file()
+    assert (external_sample / "metadata.json").is_file()
+
+
+def test_pruner_rejects_sample_below_symlinked_parent(tmp_path: Path) -> None:
+    run_root = tmp_path / "run"
+    run_root.mkdir()
+    external_sample = make_sample(tmp_path / "external", "crack", 0)
+    (run_root / "crack").symlink_to(
+        external_sample.parents[1], target_is_directory=True
+    )
+
+    completed = run_pruner(run_root)
+
+    assert completed.returncode != 0
+    assert "outside run root or uses a symlink" in completed.stderr
+    assert (external_sample / "metadata.json").is_file()

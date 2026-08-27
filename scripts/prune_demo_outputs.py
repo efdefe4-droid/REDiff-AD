@@ -28,12 +28,34 @@ RUNTIME_ROOT_FILES = frozenset(
 )
 
 
-def sample_directories(run_root: Path) -> list[Path]:
-    return sorted(
-        path
-        for path in run_root.glob("*/ref_*/*")
-        if path.is_dir() and path.name.isdigit()
-    )
+def sample_directories(run_root: Path) -> tuple[list[Path], list[str]]:
+    sample_dirs: list[Path] = []
+    errors: list[str] = []
+    for path in sorted(run_root.glob("*/ref_*/*")):
+        if not path.name.isdigit():
+            continue
+        try:
+            resolved = path.resolve(strict=True)
+            resolved.relative_to(run_root)
+        except (OSError, ValueError):
+            errors.append(f"{path}: outside run root or uses a symlink")
+            continue
+
+        relative_parts = path.relative_to(run_root).parts
+        current = run_root
+        uses_symlink = False
+        for part in relative_parts:
+            current = current / part
+            if current.is_symlink():
+                uses_symlink = True
+                break
+        if uses_symlink:
+            errors.append(f"{path}: outside run root or uses a symlink")
+        elif resolved.is_dir():
+            sample_dirs.append(path)
+        else:
+            errors.append(f"{path}: sample path is not a directory")
+    return sample_dirs, errors
 
 
 def validate_samples(sample_dirs: list[Path]) -> list[str]:
@@ -61,8 +83,8 @@ def prune_run(run_root: Path) -> int:
         print(f"ERROR: run root is not a directory: {run_root}", file=sys.stderr)
         return 1
 
-    sample_dirs = sample_directories(run_root)
-    errors = validate_samples(sample_dirs)
+    sample_dirs, discovery_errors = sample_directories(run_root)
+    errors = discovery_errors + validate_samples(sample_dirs)
     if errors:
         for error in errors:
             print(f"ERROR: {error}", file=sys.stderr)
