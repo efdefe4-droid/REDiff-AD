@@ -21,8 +21,8 @@ def imported_modules(path: Path) -> set[str]:
 
 
 def test_core_runtime_uses_in_context_entrypoints() -> None:
-    legacy_run = ROOT / ("run_" + "insert_anything.py")
-    legacy_batch = ROOT / ("batch_" + "insert_anything.py")
+    legacy_run = ROOT / ("run_" + "insert" + "_anything.py")
+    legacy_batch = ROOT / ("batch_" + "insert" + "_anything.py")
     assert (ROOT / "run_in_context.py").is_file()
     assert (ROOT / "batch_in_context.py").is_file()
     assert not legacy_run.exists()
@@ -43,9 +43,9 @@ def test_evaluation_entrypoints_use_in_context_names() -> None:
         ROOT / "eval_downstream/run_in_context_localization.sh",
     )
     old_paths = (
-        ROOT / "eval_diversity" / ("run_" + "insertanything_eval.sh"),
-        ROOT / "eval_downstream" / ("run_" + "insertanything_classification.sh"),
-        ROOT / "eval_downstream" / ("run_" + "insertanything_localization.sh"),
+        ROOT / "eval_diversity" / ("run_" + "insert" + "anything_eval.sh"),
+        ROOT / "eval_downstream" / ("run_" + "insert" + "anything_classification.sh"),
+        ROOT / "eval_downstream" / ("run_" + "insert" + "anything_localization.sh"),
     )
     assert all(path.is_file() for path in new_paths)
     assert not any(path.exists() for path in old_paths)

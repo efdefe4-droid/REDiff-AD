@@ -16,7 +16,7 @@
   "eval_source": {
     "path": "withheld_for_double_blind_review",
     "git_commit": "withheld_for_double_blind_review",
-    "role": "current working-tree eval code, including local Insert-Anything fixes"
+    "role": "current working-tree eval code, including local in-context fixes"
   },
   "attention_design": {
     "direct_localization": "target_to_ref_image",
@@ -39,15 +39,15 @@
   "hashes": {
     "configs/block_frequency_t2r.csv": "806218307ab9b87a9e0a1a3960bfc6bccbf6f75883573b87791b5d40c3858694",
     "configs/top10_t2r_blocks.txt": "4dfe00c01fd975399910b3a1bdc9331d2e61fb79c90fb287a924b27a86e88acc",
-    "batch_insert_anything.py": "05530c94b31f7b420da9e576ebb1e9b1a7f6806a6f2ec8bb2a4e8a9f860c10bf",
-    "run_insert_anything.py": "36fcc74ffe2b29e393004c91ccc0572093f1d34e3ce6b099b8e36fc9ec90cf19",
-    "generation_attention/batch_visualize_flux_attention.py": "5373d37cf2342e03e54f34e710e20e45d687a7366ce42f56705fd67f91dd53ff",
-    "generation_attention/visualize_flux_attention.py": "c10690470f40017dc511afed3739f3792be1636473776a39a404dad1a025a695",
+    "batch_in_context.py": "5fe443ebc1cb2421ced9e5cb193a42b2a9436247d0f727366bab564e196d904e",
+    "run_in_context.py": "cc5bf4df31a55dec75e77726b8b846bbbba3ed3a0611513169836e311fd4bc53",
+    "generation_attention/batch_visualize_flux_attention.py": "46223332ef074f1722db9f95f8407f5cedbb230211a44057350af2519d49024a",
+    "generation_attention/visualize_flux_attention.py": "9c99a37ff2fe8ba549538bdb3b911099e77bfcc826521c69b214e169cba72c96",
     "generation_attention/mask_refinement.py": "2a7883afe101aa3af9f6b73d9d30d1715d25c194f5d795a21cac77a7b514eb4a",
     "generation_attention/resume_safety.py": "19bc8eaa047dc63ed23fab6f47793eb985e26f4658ae2713c2a8f56639c3e4c8",
     "generation_attention/target_mask_policy.py": "ca7afea037ba61db890c3d1c3a33bd642f3ace752a778e9fa48aad7b1748d67d",
-    "scripts/run_attention_direct_top10.sh": "f61fb80bb556be2899eb6accc435ee75a1d15932434ee12480fb651b0545518d",
-    "scripts/run_hazelnut_t2r.sh": "87211e32b45f0addcd31aaff267446daf3cb221e766b9dfb340d02db7b54fdd8",
+    "scripts/run_attention_direct_top10.sh": "f9b7c6b9a0d38b85ac80608e0cb7f808571cb973e1afa3e715cd06a1e14870a6",
+    "scripts/run_hazelnut_t2r.sh": "99269927ea62690952595d7c72d4b9868154622f88dcbe82af60f93366ae1b97",
     "scripts/validate_smoke_output.py": "5e7edb0cd3e4012162ccfa7276a8faf1d7901edec04577706537943f17ea3ea5"
   },
   "verified_generation_environment": {
