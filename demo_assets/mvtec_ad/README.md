@@ -1,6 +1,6 @@
 # MVTec AD hazelnut demo subset
 
-This directory contains 15 defect-free source images and one reference image
+This directory contains five defect-free source images and one reference image
 plus pixel-precise mask for each hazelnut defect class (`crack`, `hole`,
 `print`, and `cut`). Files are unmodified excerpts from MVTec AD for the
 non-commercial, reproducible research demo in this repository.

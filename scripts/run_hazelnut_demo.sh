@@ -6,7 +6,7 @@ PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd -P)"
 DEMO_DATASET_ROOT="$PROJECT_ROOT/demo_assets/mvtec_ad/hazelnut"
 
 required=()
-for normal_index in {000..014}; do
+for normal_index in {000..004}; do
     required+=("train/good/${normal_index}.png")
 done
 required+=(
@@ -25,12 +25,22 @@ export OBJECT_NAME=hazelnut
 export DATASET_ROOT="$DEMO_DATASET_ROOT"
 export ANOMALIES_STR="${ANOMALIES_STR:-crack hole print cut}"
 export REF_IDS_STR="${REF_IDS_STR:-000 000 000 000}"
-export SAMPLES_PER_ANOMALY="${SAMPLES_PER_ANOMALY:-1}"
+export SAMPLES_PER_ANOMALY="${SAMPLES_PER_ANOMALY:-5}"
 export SAMPLES_PER_PAIR_STR="${SAMPLES_PER_PAIR_STR:-}"
 export SEED="${SEED:-309}"
 export RUN_NAME="${RUN_NAME:-hazelnut_in_context_demo_seed${SEED}}"
 export OUT_ROOT="${OUT_ROOT:-$PROJECT_ROOT/outputs/$RUN_NAME}"
 export LOCAL_FILES_ONLY="${LOCAL_FILES_ONLY:-0}"
+export LOG_TO_FILE="${LOG_TO_FILE:-0}"
+export OVERWRITE="${OVERWRITE:-1}"
+DEMO_MINIMAL_OUTPUT="${DEMO_MINIMAL_OUTPUT:-1}"
 
 echo "models:   local_files_only=$LOCAL_FILES_ONLY"
-exec bash "$PROJECT_ROOT/scripts/run_hazelnut_t2r.sh"
+echo "outputs:  minimal=$DEMO_MINIMAL_OUTPUT"
+bash "$PROJECT_ROOT/scripts/run_hazelnut_t2r.sh"
+
+if [[ "$DEMO_MINIMAL_OUTPUT" == "1" || "$DEMO_MINIMAL_OUTPUT" == "true" ]]; then
+    if [[ "${DRY_RUN:-0}" != "1" && "${DRY_RUN:-0}" != "true" ]]; then
+        python3 "$PROJECT_ROOT/scripts/prune_demo_outputs.py" "$OUT_ROOT"
+    fi
+fi

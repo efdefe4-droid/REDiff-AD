@@ -233,6 +233,62 @@ def test_bundled_hazelnut_demo_dry_run_uses_all_defects(tmp_path: Path) -> None:
     assert f"dataset:  {ROOT / 'demo_assets/mvtec_ad/hazelnut'}" in output
     assert "defects:  crack hole print cut" in output
     assert "refs:     000 000 000 000" in output
-    assert "samples:  1 per defect" in output
+    assert "samples:  5 per defect" in output
     assert "models:   local_files_only=0" in output
     assert "DRY_RUN=1: configuration validated; generation was not started." in output
+
+
+def test_bundled_demo_prunes_successful_generation_to_three_files(tmp_path: Path) -> None:
+    fake_bin = tmp_path / "bin"
+    fake_bin.mkdir()
+    fake_bash = fake_bin / "bash"
+    fake_bash.write_text(
+        """#!/bin/sh
+set -eu
+sample_dir="$OUT_ROOT/crack/ref_000/000"
+mkdir -p "$sample_dir/attention_steps"
+for name in edit.png coarse_mask.png contour_refined_mask.png metadata.json soft_mask.npy; do
+    printf 'generated' > "$sample_dir/$name"
+done
+printf 'debug' > "$sample_dir/attention_steps/step_01.png"
+printf 'runtime' > "$OUT_ROOT/run_log.csv"
+printf '%s' "$OVERWRITE" > "$CAPTURE_OVERWRITE"
+""",
+        encoding="utf-8",
+    )
+    fake_bash.chmod(0o755)
+
+    out_root = tmp_path / "out"
+    env = os.environ.copy()
+    env.update(
+        {
+            "PATH": f"{fake_bin}:{env['PATH']}",
+            "OUT_ROOT": str(out_root),
+            "ANOMALIES_STR": "crack",
+            "REF_IDS_STR": "000",
+            "SAMPLES_PER_ANOMALY": "1",
+            "DEMO_MINIMAL_OUTPUT": "1",
+            "LOG_TO_FILE": "0",
+            "CAPTURE_OVERWRITE": str(tmp_path / "overwrite.txt"),
+        }
+    )
+    env.pop("OVERWRITE", None)
+
+    completed = subprocess.run(
+        ["/bin/bash", "scripts/run_hazelnut_demo.sh"],
+        cwd=ROOT,
+        env=env,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+
+    assert completed.returncode == 0, completed.stdout + completed.stderr
+    sample_dir = out_root / "crack" / "ref_000" / "000"
+    assert {path.name for path in sample_dir.iterdir()} == {
+        "edit.png",
+        "coarse_mask.png",
+        "contour_refined_mask.png",
+    }
+    assert not (out_root / "run_log.csv").exists()
+    assert (tmp_path / "overwrite.txt").read_text(encoding="utf-8") == "1"

@@ -7,6 +7,12 @@ refined anomaly masks.
 > **Double-blind review:** author names and identifying source-repository
 > metadata are intentionally withheld. They will be restored after review.
 
+## Method overview
+
+<p align="center">
+  <img src="docs/assets/REDiff-AD_pipeline.png" alt="REDiff-AD pipeline" width="100%">
+</p>
+
 ## What is included
 
 ```text
@@ -41,7 +47,7 @@ Python 3.11 and a CUDA-capable GPU are recommended. The verified generation
 stack uses PyTorch 2.6.0 with CUDA 12.4.
 
 ```bash
-git clone https://github.com/efdefe4-droid/REDiff-AD.git
+git clone <ANONYMOUS_REPOSITORY_URL>
 cd REDiff-AD
 
 conda create -n rediff-ad python=3.11 -y
@@ -76,7 +82,7 @@ The self-contained demo below sets this automatically.
 
 ## 2. Self-contained hazelnut demo
 
-The repository includes 15 normal hazelnut images and the `000` reference plus
+The repository includes five normal hazelnut images and the `000` reference plus
 mask for each defect (`crack`, `hole`, `print`, and `cut`). No dataset download
 or `MVTEC_ROOT` is needed for this demo.
 
@@ -88,19 +94,36 @@ conda activate rediff-ad
 DRY_RUN=1 LOG_TO_FILE=0 bash scripts/run_hazelnut_demo.sh
 ```
 
-Generate one image for each of the four defects:
+Generate five images for each of the four defects:
 
 ```bash
 LOCAL_FILES_ONLY=0 bash scripts/run_hazelnut_demo.sh
 ```
 
 Model access and Hugging Face downloads may still be required on the first
-run. The default output is `outputs/hazelnut_in_context_demo_seed309`. To use
-all 15 bundled normal images once per defect, run:
+run. The default output is `outputs/hazelnut_in_context_demo_seed309`. Each
+sample directory contains only the submission-facing artifacts:
 
-```bash
-SAMPLES_PER_ANOMALY=15 bash scripts/run_hazelnut_demo.sh
-```
+- `edit.png`
+- `coarse_mask.png`
+- `contour_refined_mask.png`
+
+Representative outputs from the verified hazelnut demo:
+
+| Crack | Hole |
+|:---:|:---:|
+| <img src="docs/assets/demo/hazelnut_crack.png" alt="Hazelnut crack demo output" width="420"> | <img src="docs/assets/demo/hazelnut_hole.png" alt="Hazelnut hole demo output" width="420"> |
+| **Print** | **Cut** |
+| <img src="docs/assets/demo/hazelnut_print.png" alt="Hazelnut print demo output" width="420"> | <img src="docs/assets/demo/hazelnut_cut.png" alt="Hazelnut cut demo output" width="420"> |
+
+The five bundled normal images are used as source-image candidates. Override
+`SAMPLES_PER_ANOMALY` if a different number of outputs per defect is needed.
+The demo defaults to `OVERWRITE=1`, so rerunning it refreshes its output folder;
+set a different `RUN_NAME` or `OUT_ROOT` to preserve an earlier run.
+
+The demo validates that all three final files exist before removing temporary
+attention maps, overlays, metadata, and machine-specific runtime logs. Set
+`DEMO_MINIMAL_OUTPUT=0` to retain the complete diagnostic output instead.
 
 The bundled files, checksums, provenance, and asset-specific license are
 documented in [demo_assets/mvtec_ad/README.md](demo_assets/mvtec_ad/README.md)
@@ -195,6 +218,9 @@ Each sample directory contains:
 - `q80_appearance_mask.png`: first refinement stage.
 - `contour_refined_mask.png`: final mask used by downstream evaluation.
 - `metadata.json` and `direct_aggregate_summary.json`: reproducibility records.
+
+This complete layout applies to the full generation launcher. The demo uses
+the three-file minimal layout documented above.
 
 ## 6. Evaluation
 
