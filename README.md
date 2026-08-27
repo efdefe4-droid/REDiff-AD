@@ -10,10 +10,12 @@ refined anomaly masks.
 ## What is included
 
 ```text
-run_insert_anything.py                  FLUX Fill, Redux and LoRA loading
-batch_insert_anything.py                image/mask preparation
+run_in_context.py                       FLUX Fill, Redux and LoRA loading
+batch_in_context.py                     image/mask preparation
 generation_attention/                   T2R attention, diversity and refinement
 configs/                                frozen T2R blocks and reproducibility data
+demo_assets/mvtec_ad/hazelnut/          self-contained hazelnut demo subset
+scripts/run_hazelnut_demo.sh            self-contained demo launcher
 scripts/run_hazelnut_t2r.sh             main generation launcher
 scripts/smoke_hazelnut_t2r.sh           one-image integration smoke test
 scripts/validate_smoke_output.py         output/runtime validator
@@ -27,7 +29,7 @@ The default method uses:
 - Adaptive reference injection: the same T2R Top-10 blocks.
 - Shape-K diversity: 36 middle blocks, diffusion steps 12–20.
 - Mask refinement: Q80 appearance refinement followed by contour refinement.
-- FLUX transformer: bitsandbytes INT4/NF4 with Insert-Anything LoRA.
+- FLUX transformer: bitsandbytes INT4/NF4 with the configured In-Context LoRA.
 
 Implementation details are summarized in
 [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md), and the exact experimental
@@ -68,10 +70,43 @@ Request access where required, then authenticate:
 huggingface-cli login
 ```
 
-Launchers default to local-cache-only mode. On the first run, set
-`LOCAL_FILES_ONLY=0` to download the model files; later runs can omit it.
+The full-dataset launchers default to local-cache-only mode. On the first run,
+set `LOCAL_FILES_ONLY=0` to download the model files; later runs can omit it.
+The self-contained demo below sets this automatically.
 
-## 2. Dataset
+## 2. Self-contained hazelnut demo
+
+The repository includes 15 normal hazelnut images and the `000` reference plus
+mask for each defect (`crack`, `hole`, `print`, and `cut`). No dataset download
+or `MVTEC_ROOT` is needed for this demo.
+
+First validate every bundled asset and print the effective commands without
+loading a model:
+
+```bash
+conda activate rediff-ad
+DRY_RUN=1 LOG_TO_FILE=0 bash scripts/run_hazelnut_demo.sh
+```
+
+Generate one image for each of the four defects:
+
+```bash
+LOCAL_FILES_ONLY=0 bash scripts/run_hazelnut_demo.sh
+```
+
+Model access and Hugging Face downloads may still be required on the first
+run. The default output is `outputs/hazelnut_in_context_demo_seed309`. To use
+all 15 bundled normal images once per defect, run:
+
+```bash
+SAMPLES_PER_ANOMALY=15 bash scripts/run_hazelnut_demo.sh
+```
+
+The bundled files, checksums, provenance, and asset-specific license are
+documented in [demo_assets/mvtec_ad/README.md](demo_assets/mvtec_ad/README.md)
+and [demo_assets/mvtec_ad/LICENSE.md](demo_assets/mvtec_ad/LICENSE.md).
+
+## 3. Full dataset
 
 Download MVTec AD from the
 [official dataset page](https://www.mvtec.com/research-teaching/datasets/mvtec-ad)
@@ -95,9 +130,10 @@ Either export the path or place the data under `datasets/` in this repository:
 export MVTEC_ROOT=/path/to/mvtec_ad
 ```
 
-No model, dataset, generated image, checkpoint, or log is tracked by Git.
+Apart from the documented 23-file hazelnut demo subset, no dataset, model,
+generated image, checkpoint, or log is tracked by Git.
 
-## 3. Quick reproduction
+## 4. Quick reproduction with the full dataset
 
 First check all paths and effective parameters without loading a model:
 
@@ -125,7 +161,7 @@ The validator checks active LoRA adapters, Direct/Adaptive T2R Top-10,
 all-block attention, Shape-K calls, coarse/Q80/contour masks, and whether the
 edit is localized inside the generated target mask.
 
-## 4. Generation
+## 5. Generation
 
 Generate six samples for each hazelnut defect:
 
@@ -160,10 +196,10 @@ Each sample directory contains:
 - `contour_refined_mask.png`: final mask used by downstream evaluation.
 - `metadata.json` and `direct_aggregate_summary.json`: reproducibility records.
 
-## 5. Evaluation
+## 6. Evaluation
 
 All evaluation launchers default to the `rediff-ad` conda environment and the
-Insert-Anything output layout. Set the generation and dataset roots once:
+In-Context output layout. Set the generation and dataset roots once:
 
 ```bash
 export RESULT_ROOT="$PWD/outputs/hazelnut_rediff_ad"
@@ -176,7 +212,7 @@ Check the diversity-evaluation layout without computing metrics:
 OBJ=hazelnut ANOMALIES='crack hole print cut' \
 RESULT_ROOT="$RESULT_ROOT" REAL_ROOT="$MVTEC_ROOT" \
 MAX_IMAGES=6 DRY_RUN=1 \
-bash eval_diversity/run_insertanything_eval.sh
+bash eval_diversity/run_in_context_eval.sh
 ```
 
 Run KID, IS, and IC-LPIPS by removing `DRY_RUN=1`. Individual metrics can be
@@ -188,7 +224,7 @@ Prepare and verify localization pairs before training:
 OBJ=hazelnut ANOMALIES='crack hole print cut' \
 RESULT_ROOT="$RESULT_ROOT" MVTEC_PATH="$MVTEC_ROOT" \
 MASK_NAME=contour_refined_mask.png MAX_IMAGES=6 PREPARE_ONLY=1 \
-bash eval_downstream/run_insertanything_localization.sh
+bash eval_downstream/run_in_context_localization.sh
 ```
 
 Use the same command without `PREPARE_ONLY=1` for localization training.
@@ -198,7 +234,7 @@ Classification uses the corresponding launcher:
 OBJ=hazelnut ANOMALIES='crack hole print cut' \
 RESULT_ROOT="$RESULT_ROOT" MVTEC_PATH="$MVTEC_ROOT" \
 MAX_IMAGES=6 PREPARE_ONLY=1 \
-bash eval_downstream/run_insertanything_classification.sh
+bash eval_downstream/run_in_context_classification.sh
 ```
 
 See [docs/EVALUATION.md](docs/EVALUATION.md) for metric controls and mask

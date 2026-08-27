@@ -15,8 +15,8 @@ generation_attention/batch_visualize_flux_attention.py
    |              |                      Q80 -> contour mask
    |              +--> visualize_flux_attention.py
    |                   T2R recorder, Adaptive, Shape-K, all blocks
-   +--> batch_insert_anything.py -> run_insert_anything.py
-                                      FLUX Fill, Redux, INT4, LoRA
+   +--> batch_in_context.py -> run_in_context.py
+                                  FLUX Fill, Redux, INT4, LoRA
 ```
 
 ## Attention streams
@@ -40,7 +40,7 @@ Adaptive reads attention during diffusion and can change reference-token scale, 
 
 ## INT4 mode
 
-The default is the full diffusers FLUX transformer quantized with bitsandbytes NF4. It is not Nunchaku. The batch attention recorder needs per-block processors, so `batch_visualize_flux_attention.py` explicitly disables the fused Nunchaku path. Insert-Anything LoRA is loaded after the quantized transformer is assembled.
+The default is the full diffusers FLUX transformer quantized with bitsandbytes NF4. It is not Nunchaku. The batch attention recorder needs per-block processors, so `batch_visualize_flux_attention.py` explicitly disables the fused Nunchaku path. The configured In-Context LoRA is loaded after the quantized transformer is assembled.
 
 After loading, available and active PEFT adapter names are aligned and audited. Generation stops before sampling if no registered LoRA adapter is active. The audit is persisted in the run config and sample metadata.
 

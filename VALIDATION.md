@@ -9,7 +9,8 @@ smoke performed before release.
 - GPU smoke: active In-Context LoRA, 57 attention blocks, 36 × 9 Shape-K
   calls, localized edit, coarse mask and both refinement stages: PASS.
 - Full benchmark reproduction: run by the reviewer with the commands in
-  `README.md`; models, datasets and generated outputs are not distributed.
+  `README.md`; models, the full dataset and generated outputs are not
+  distributed. Only the documented hazelnut demo subset is bundled.
 
 The validator rejects missing artifacts, inactive LoRA, incompatible attention
 settings and structurally complete no-op edits.
